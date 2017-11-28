@@ -1,0 +1,60 @@
+#!/usr/local/bin/env zsh
+# -*- mode: shell-script; -*-
+
+BIN=$(dirname ${0:A})
+LIB=$(realpath $BIN/../lib)
+
+function display_help {
+  cat <<-EOF
+proj $(display_version)
+
+Some personal project utilities.
+
+Usage: proj [COMMAND] [OPTIONS]
+
+  -h, --help     Print help and exit
+  -V, --version  Print version and exit
+
+Commands:
+
+  ls  $(print_purpose ls)
+EOF
+}
+
+function display_version {
+  cat $BIN/../Makefile \
+    | grep ^VERSION \
+    | tr -d ' ' \
+    | cut -d '=' -f2
+}
+
+function run_bin {
+  $BIN/proj-$1 $*
+}
+
+function print_purpose {
+  cat $LIB/$1.ggo \
+    | grep purpose \
+    | tr -d '"' \
+    | cut -d ' ' -f 2-
+}
+
+if test $# -eq 0; then
+  display_help
+else
+  while test $# -ne 0; do
+    case $1 in
+      -V|--version) display_version ;;
+      -h|--help) display_help; exit ;;
+      l|ls) run_bin ls "${@:2}"; exit ;;
+      h|help)
+        case $2 in
+          ls) run_bin ls --help; exit ;;
+          *) display_help; exit ;;
+        esac
+        exit ;;
+      *) display_help; exit ;;
+    esac
+    shift
+  done
+fi

@@ -1,0 +1,12 @@
+# -*- mode: conf; -*-
+
+purpose "List projects"
+
+section "Display Options"
+option "oneline" 1 "Display one entry per line" flag off
+option "long" l "Display extended project metadata as a table" flag off
+option "grid" G "Display projects as a grid" flag on
+option "fullpath" f "Display full path" flag off
+
+section "Filtering and Sorting Options"
+option "limit" L "Limit number of displayed projects" int typestr="n" default="10"
